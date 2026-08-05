@@ -60,7 +60,7 @@ Avoid fixed sleeps in both unit and e2e tests. Prefer event-driven helpers that 
 - `skills/` - shipped package skills consumed by Pi
 - `.agents/skills/` - local repo-only skills for development workflows
 
-Future design notes live in `docs/future-persistent-manager.md` and `docs/future-cleanup-hooks.md`. Keep implemented behavior in living docs and put new active plans under `.agents/plans/`.
+Future design notes live in `docs/future-cleanup-hooks.md`. Keep implemented behavior in living docs and put new active plans under `.agents/plans/`.
 
 ## Rendering conventions
 

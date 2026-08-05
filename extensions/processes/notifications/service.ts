@@ -56,12 +56,22 @@ interface ProcessMatcherState {
   generation: number;
 }
 
-export function createNotificationService(deps: NotificationServiceDeps): {
-  dispose: () => void;
+export interface NotificationServiceState {
+  matcherStates: Map<string, ProcessMatcherState>;
+}
+
+export function createNotificationServiceState(): NotificationServiceState {
+  return { matcherStates: new Map() };
+}
+
+export function createNotificationService(
+  deps: NotificationServiceDeps & { state?: NotificationServiceState },
+): {
+  dispose: (options?: { preserveMatcherState?: boolean }) => void;
 } {
   const { events, manager, registry, getProcess } = deps;
   let disposed = false;
-  const matcherStates = new Map<string, ProcessMatcherState>();
+  const matcherStates = deps.state?.matcherStates ?? new Map();
 
   const unsubscribe = manager.onEvent(handleEvent);
 
@@ -328,10 +338,10 @@ export function createNotificationService(deps: NotificationServiceDeps): {
   }
 
   return {
-    dispose() {
+    dispose(options) {
       disposed = true;
       unsubscribe();
-      matcherStates.clear();
+      if (!options?.preserveMatcherState) matcherStates.clear();
     },
   };
 }

@@ -116,6 +116,5 @@ The docs page is generated from `README.md` by an external build, not in this re
 Unimplemented design notes live in `docs/`:
 
 - `docs/future-cleanup-hooks.md` - planned `cleanup` support for `process start` / `process stop`
-- `docs/future-persistent-manager.md` - planned cross-session process persistence
 
 These describe intended future behavior, not current behavior. Active implementation work goes under `.agents/plans/`.

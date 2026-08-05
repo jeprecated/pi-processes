@@ -1,10 +1,11 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
 import type { ProcessManager } from "../../../src/manager";
+import { shutdownExtensionManager } from "../manager-lifetime";
 import type { NotificationRegistry } from "../notifications/registry";
 
 interface NotificationService {
-  dispose(): void;
+  dispose(options?: { preserveMatcherState?: boolean }): void;
 }
 
 type Disposer = () => void;
@@ -23,7 +24,7 @@ export function registerCleanupHook(
 ): void {
   let shuttingDown = false;
 
-  pi.on("session_shutdown", async () => {
+  pi.on("session_shutdown", async (event) => {
     if (shuttingDown) return;
     shuttingDown = true;
 
@@ -35,9 +36,10 @@ export function registerCleanupHook(
       dispose();
     }
 
-    deps.notificationService.dispose();
-    deps.notifications.clear();
-    deps.manager.killAll();
-    deps.manager.cleanup();
+    deps.notificationService.dispose({
+      preserveMatcherState: event.reason === "reload",
+    });
+    if (event.reason !== "reload") deps.notifications.clear();
+    shutdownExtensionManager(deps.manager, event.reason);
   });
 }

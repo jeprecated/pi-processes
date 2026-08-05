@@ -45,6 +45,12 @@ Pi does not wait around for a background process. After it starts one, it keeps 
 
 That is how Pi can start a dev server and then keep coding, or run a test watcher and react when a test fails, without sleeping or polling. If a watch fires too often, Pi can quiet it without restarting the process.
 
+## Reload without stopping processes
+
+Running processes and their notification watches survive `/reload`, including automatic reloads after extension changes. Their tools, event listeners, and UI reconnect to the same process state after Pi reloads the extension.
+
+Starting or switching sessions with `/new`, `/resume`, or `/fork` still stops the current session's processes, as does quitting Pi.
+
 ## Open the process panel
 
 Use `/ps` to open the main process panel. It shows running and finished processes, with the most recent output preview. The preview opens on the newest page so you can see live activity without scrolling.

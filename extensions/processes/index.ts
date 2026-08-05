@@ -1,5 +1,4 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { getManager } from "../../src/get-manager";
 import { isWindowsPlatform } from "../../src/utils/platform";
 import { registerClearCommand } from "./commands/clear";
 import { registerKillCommand } from "./commands/kill";
@@ -12,11 +11,9 @@ import { registerLogSubscriptions } from "./handlers/subscriptions";
 import { registerBackgroundBlocker } from "./hooks/background-blocker";
 import { registerCleanupHook } from "./hooks/cleanup";
 import { registerEventBridge } from "./hooks/event-bridge";
+import { getExtensionManagerState } from "./manager-lifetime";
 import { registerProcessNotificationRenderer } from "./message-renderer";
-import {
-  createNotificationRegistry,
-  createNotificationService,
-} from "./notifications/service";
+import { createNotificationService } from "./notifications/service";
 import { registerProcessSettings } from "./settings";
 import { registerProcessTool } from "./tools";
 
@@ -40,15 +37,17 @@ export default async function processesExtension(
   await loadProcessConfig();
   registerMigrationMessageNotifications(pi);
 
-  const manager = getManager({
-    getConfiguredShellPath: () => configLoader.getConfig().execution.shellPath,
-  });
-  const notifications = createNotificationRegistry();
+  const { manager, notifications, notificationServiceState } =
+    getExtensionManagerState({
+      getConfiguredShellPath: () =>
+        configLoader.getConfig().execution.shellPath,
+    });
   const notificationService = createNotificationService({
     events: pi.events,
     manager,
     registry: notifications,
     getProcess: (id) => manager.get(id),
+    state: notificationServiceState,
   });
 
   const getConfig = () => configLoader.getConfig();

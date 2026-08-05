@@ -6,7 +6,10 @@ import type { ProcessInfo } from "../../../src/types";
 import { flushQueuedMicrotasks } from "../../../tests/utils/async";
 
 import { createNotificationRegistry } from "./registry";
-import { createNotificationService } from "./service";
+import {
+  createNotificationService,
+  createNotificationServiceState,
+} from "./service";
 
 function makeInfo(overrides: Partial<ProcessInfo> = {}): ProcessInfo {
   return {
@@ -49,6 +52,9 @@ function createFakeManager() {
     },
     get(id: string): ProcessInfo | null {
       return processes.get(id) ?? null;
+    },
+    listenerCount(): number {
+      return listeners.length;
     },
   };
 }
@@ -302,6 +308,52 @@ describe("NotificationService", () => {
 
     processes.delete("proc_1");
     service.dispose();
+  });
+
+  it("does not re-fire a non-repeat watch after a reload", () => {
+    const fakeManager = createFakeManager();
+    const spy = createNotificationSpy();
+    const registry = createNotificationRegistry();
+    const state = createNotificationServiceState();
+
+    processes.set("proc_1", makeInfo({ id: "proc_1" }));
+    registry.register("proc_1", {
+      logMatches: [{ pattern: "ready" }],
+    });
+
+    const first = createNotificationService({
+      events: spy.events,
+      manager: fakeManager as never,
+      registry,
+      getProcess: (id) => processes.get(id) ?? null,
+      state,
+    });
+    fakeManager.emit({
+      type: "process_output_changed",
+      id: "proc_1",
+      appendedText: [{ type: "stdout", text: "ready" }],
+    });
+    first.dispose({ preserveMatcherState: true });
+    expect(fakeManager.listenerCount()).toBe(0);
+
+    const second = createNotificationService({
+      events: spy.events,
+      manager: fakeManager as never,
+      registry,
+      getProcess: (id) => processes.get(id) ?? null,
+      state,
+    });
+    expect(fakeManager.listenerCount()).toBe(1);
+    fakeManager.emit({
+      type: "process_output_changed",
+      id: "proc_1",
+      appendedText: [{ type: "stdout", text: "ready" }],
+    });
+
+    expect(spy.emitted).toHaveLength(1);
+
+    processes.delete("proc_1");
+    second.dispose();
   });
 
   it("does not emit log match notification when no appended text", () => {
