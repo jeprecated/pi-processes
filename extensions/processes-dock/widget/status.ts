@@ -82,9 +82,14 @@ export function renderRunningStatus(
     LIVE_STATUSES.has(process.status),
   ).length;
   if (count === 0) return undefined;
-  return theme.fg(
-    "warning",
-    `● ${count} background ${count === 1 ? "process" : "processes"}`,
+  return theme.bg(
+    "toolPendingBg",
+    theme.fg(
+      "warning",
+      theme.bold(
+        ` \u26a1 ${count} BACKGROUND ${count === 1 ? "PROCESS" : "PROCESSES"} `,
+      ),
+    ),
   );
 }
 

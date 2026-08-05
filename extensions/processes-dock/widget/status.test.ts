@@ -29,14 +29,15 @@ function makeProcess(overrides: Partial<ProcessInfo> = {}): ProcessInfo {
 // included for completeness.
 const theme = {
   fg: (color: string, text: string) => `{${color}:${text}}`,
-  bg: (_color: string, text: string) => text,
+  bg: (color: string, text: string) => `{${color}:${text}}`,
+  bold: (text: string) => `{bold:${text}}`,
 } as never;
 
 describe("renderRunningStatus", () => {
   it("keeps a conspicuous live-process count in the footer", () => {
     expect(renderRunningStatus([], theme)).toBeUndefined();
     expect(renderRunningStatus([makeProcess()], theme)).toBe(
-      "{warning:● 1 background process}",
+      "{toolPendingBg:{warning:{bold: \u26a1 1 BACKGROUND PROCESS }}}",
     );
     expect(
       renderRunningStatus(
@@ -47,7 +48,7 @@ describe("renderRunningStatus", () => {
         ],
         theme,
       ),
-    ).toBe("{warning:● 2 background processes}");
+    ).toBe("{toolPendingBg:{warning:{bold: \u26a1 2 BACKGROUND PROCESSES }}}");
   });
 });
 

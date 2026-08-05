@@ -93,7 +93,7 @@ Use `/ps:kill [id]` to stop a running process, and `/ps:clear` to remove finishe
 
 ## Keep process activity in view
 
-While any managed process is live, Pi's persistent footer shows a warning-colored background-process count. It clears when every process finishes.
+While any managed process is live, Pi's persistent footer shows a bold, warning-colored background-process badge. It clears when every process finishes.
 
 Enable the optional status widget in `/ps:settings` for a detailed line below the editor. Each process shows a status dot and its name, with `+N more` overflow when the line does not fit.
 
