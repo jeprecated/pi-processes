@@ -87,7 +87,7 @@ export function renderRunningStatus(
     theme.fg(
       "warning",
       theme.bold(
-        ` \u26a1 ${count} BACKGROUND ${count === 1 ? "PROCESS" : "PROCESSES"} `,
+        ` \u25b6 ${count} BACKGROUND ${count === 1 ? "PROCESS" : "PROCESSES"} `,
       ),
     ),
   );

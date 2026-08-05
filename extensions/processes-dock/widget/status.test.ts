@@ -37,7 +37,7 @@ describe("renderRunningStatus", () => {
   it("keeps a conspicuous live-process count in the footer", () => {
     expect(renderRunningStatus([], theme)).toBeUndefined();
     expect(renderRunningStatus([makeProcess()], theme)).toBe(
-      "{toolPendingBg:{warning:{bold: \u26a1 1 BACKGROUND PROCESS }}}",
+      "{toolPendingBg:{warning:{bold: \u25b6 1 BACKGROUND PROCESS }}}",
     );
     expect(
       renderRunningStatus(
@@ -48,7 +48,7 @@ describe("renderRunningStatus", () => {
         ],
         theme,
       ),
-    ).toBe("{toolPendingBg:{warning:{bold: \u26a1 2 BACKGROUND PROCESSES }}}");
+    ).toBe("{toolPendingBg:{warning:{bold: \u25b6 2 BACKGROUND PROCESSES }}}");
   });
 });
 

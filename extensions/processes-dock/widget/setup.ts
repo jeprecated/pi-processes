@@ -27,7 +27,7 @@ import type { DockActions, DockState } from "./types";
 
 const DOCK_WIDGET_KEY = "processes-dock";
 const STATUS_WIDGET_KEY = "processes-status";
-const RUNNING_STATUS_KEY = "processes-running";
+const RUNNING_STATUS_KEY = "processes";
 const MAX_NOTIFY_MARKERS_PER_PROCESS = 100;
 const MAX_PREVIEW_PROCESSES = 8;
 const REFRESH_THROTTLE_MS = 125;
