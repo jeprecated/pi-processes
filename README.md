@@ -91,11 +91,11 @@ Use `/ps:kill [id]` to stop a running process, and `/ps:clear` to remove finishe
 
 `/ps:clear` never touches live processes.
 
-## Keep a status line in view
+## Keep process activity in view
 
-Enable the status widget in `/ps:settings` to show a compact line of running processes below the editor. Each process shows a status dot, its name, and its state, with `+N more` overflow when the line does not fit.
+While any managed process is live, Pi's persistent footer shows a warning-colored background-process count. It clears when every process finishes.
 
-It is disabled by default. The widget reflows on resize and clears itself when the process list is empty.
+Enable the optional status widget in `/ps:settings` for a detailed line below the editor. Each process shows a status dot and its name, with `+N more` overflow when the line does not fit.
 
 ## Send input to a process
 

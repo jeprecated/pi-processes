@@ -22,11 +22,12 @@ import {
 import { renderLogDock } from "../components/log-dock-component";
 import { createDockState } from "../dock-state";
 import { connectToProcessLogs, type LogsConnection } from "../logs-client";
-import { renderStatusWidget } from "./status";
+import { renderRunningStatus, renderStatusWidget } from "./status";
 import type { DockActions, DockState } from "./types";
 
 const DOCK_WIDGET_KEY = "processes-dock";
 const STATUS_WIDGET_KEY = "processes-status";
+const RUNNING_STATUS_KEY = "processes-running";
 const MAX_NOTIFY_MARKERS_PER_PROCESS = 100;
 const MAX_PREVIEW_PROCESSES = 8;
 const REFRESH_THROTTLE_MS = 125;
@@ -197,6 +198,10 @@ export function setupDockWidgets(
 
     render();
     renderStatus();
+    ctx.ui.setStatus(
+      RUNNING_STATUS_KEY,
+      renderRunningStatus(processes, ctx.ui.theme),
+    );
   };
 
   const scheduleRefresh = () => {
@@ -457,6 +462,7 @@ export function setupDockWidgets(
       ctx.ui.setWidget(STATUS_WIDGET_KEY, undefined, {
         placement: "belowEditor",
       });
+      ctx.ui.setStatus(RUNNING_STATUS_KEY, undefined);
     },
   };
 }

@@ -74,6 +74,20 @@ function partitionForStatusLine(processes: ProcessInfo[]): {
   return { individual, exitedSuccess };
 }
 
+export function renderRunningStatus(
+  processes: ProcessInfo[],
+  theme: Theme,
+): string | undefined {
+  const count = processes.filter((process) =>
+    LIVE_STATUSES.has(process.status),
+  ).length;
+  if (count === 0) return undefined;
+  return theme.fg(
+    "warning",
+    `● ${count} background ${count === 1 ? "process" : "processes"}`,
+  );
+}
+
 /**
  * Render the single-line status widget shown below the editor.
  *

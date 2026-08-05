@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import type { ProcessInfo } from "../../../src/types";
-import { renderStatusWidget } from "./status";
+import { renderRunningStatus, renderStatusWidget } from "./status";
 
 function makeProcess(overrides: Partial<ProcessInfo> = {}): ProcessInfo {
   return {
@@ -31,6 +31,25 @@ const theme = {
   fg: (color: string, text: string) => `{${color}:${text}}`,
   bg: (_color: string, text: string) => text,
 } as never;
+
+describe("renderRunningStatus", () => {
+  it("keeps a conspicuous live-process count in the footer", () => {
+    expect(renderRunningStatus([], theme)).toBeUndefined();
+    expect(renderRunningStatus([makeProcess()], theme)).toBe(
+      "{warning:● 1 background process}",
+    );
+    expect(
+      renderRunningStatus(
+        [
+          makeProcess(),
+          makeProcess({ id: "proc_2", status: "terminating" }),
+          makeProcess({ id: "proc_3", status: "exited" }),
+        ],
+        theme,
+      ),
+    ).toBe("{warning:● 2 background processes}");
+  });
+});
 
 describe("renderStatusWidget", () => {
   it("bounds names by display width and drops escape sequences", () => {
